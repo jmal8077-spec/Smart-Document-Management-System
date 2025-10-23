@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة ضبط الوثائق الذكي - جامعة أسيوط</title>
+    <style>
+        /* الخطوط والألوان الأساسية */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        :root {
+            --primary-color: #004a99; /* أزرق الجامعة */
+            --secondary-color: #f7b731; /* لون تميز */
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 95px; /* مساحة أكبر للفوتر الثابت */
+        }
+
+        /* رأس الصفحة (الهيدر) */
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 15px; /* المسافة بين الشعارات والعنوان */
+        }
+
+        /* تنسيق الشعار والعلم والرؤية */
+        .header-logo {
+            line-height: 1;
+        }
+        
+        .flag-emblem {
+            background-color: #d63333; /* لون العلم الأحمر */
+            color: white;
+            font-size: 2.2em;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 900;
+        }
+        
+        .vision-emblem {
+            background-color: var(--secondary-color); /* لون الرؤية (أصفر/ذهبي) */
+            color: var(--primary-color);
+            padding: 5px 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .icon {
+            font-size: 2.2em;
+            color: var(--secondary-color);
+        }
+        
+        .header-user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: auto;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: var(--primary-color);
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .user-role {
+            font-size: 0.85em;
+            color: #ffda79;
+            margin-top: 2px;
+        }
+
+        /* زر تسجيل الخروج في أقصى اليسار */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto; /* يدفع المحتوى لليمين */
+        }
+        
+        /* تصميم عداد الزوار */
+        .visitor-counter {
+            font-size: 0.9em; 
+            padding: 4px 8px; 
+            background-color: var(--secondary-color); 
+            color: var(--primary-color); 
+            border-radius: 4px; 
+            display: flex; 
+            align-items: center; 
+            gap: 5px;
+            font-weight: bold;
+        }
+
+        /* المحتوى الرئيسي */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* === شاشة تسجيل الدخول الجديدة === */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: row; /* لتقسيم الشاشة */
+            justify-content: center;
+            align-items: center;
+            gap: 30px; /* المسافة بين الجزئين */
+            padding: 20px;
+            z-index: 1000;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        #preview-pane {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+            height: 600px; 
+            text-align: center;
+            border: 3px solid var(--secondary-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        @media (max-width: 992px) {
+            #login-screen {
+                flex-direction: column; 
+                overflow-y: auto;
+            }
+            #preview-pane {
+                height: 400px;
+                max-width: 400px;
+            }
+        }
+        
+        #main-content {
+            display: none; 
+        }
+
+        /* باقي الستايلات الخاصة بالداشبورد */
+        .form-section h2, .status-section h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group select,
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+        
+        @media print {
+            .footer, .header {
+                display: none;
+            }
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #003366;
+        }
+
+        /* جدول حالة الطلبات */
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .status-table th, .status-table td {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            text-align: right;
+        }
+
+        .status-table th {
+            background-color: #e9ecef;
+            color: var(--primary-color);
+        }
+
+        .status-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        /* New Style for Action Button */
+        .status-table button {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            border: 1px solid var(--secondary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+        
+        .status-table button:disabled {
+            background: #95a5a6;
+            color: white;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .status-table button:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .status-table .status-pending { color: #f39c12; font-weight: bold; }
+        .status-table .status-approved { color: #2ecc71; font-weight: bold; }
+        .status-table .status-printed { color: var(--primary-color); font-weight: bold; }
+        .status-table .status-completed { color: #27ae60; font-weight: bold; }
+        
+        .status-table a {
+            color: #17a2b8; 
+            text-decoration: underline;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        /* أزرار إدارة المستندات */
+        .doc-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+        
+        .doc-actions button {
+            padding: 4px 8px;
+            font-size: 0.8em;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .download-btn {
+            background: #3498db;
+            color: white;
+        }
+        
+        .download-btn:hover {
+            background: #2980b9;
+        }
+        
+        .replace-btn {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .replace-btn:hover {
+            background: #e67e22;
+        }
+        
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .preview-btn {
+            background: #9b59b6;
+            color: white;
+        }
+        
+        .preview-btn:hover {
+            background: #8e44ad;
+        }
+
+        /* الفوتر وزر التزامن */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-color: #333;
+            color: white;
+            padding: 10px 40px; 
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            flex-wrap: wrap;
+        }
+        
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: right;
+        }
+        
+        .footer-info p {
+            margin: 2px 0;
+        }
+
+        .footer-info .support-note {
+            color: #ffda79; 
+            font-weight: bold;
+            margin-top: 5px;
+            border-top: 1px dashed #555;
+            padding-top: 3px;
+            width: 100%;
+        }
+
+        .support-phone {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            direction: ltr;
+            display: inline-block;
+            margin: 2px 0;
+        }
+
+        .sync-btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .sync-btn:hover {
+            background-color: #ffc107;
+        }
+
+        /* === التحسينات الجديدة === */
+        
+        /* مؤثرات الانتقال */
+        .button, .form-control, .submit-btn, .sync-btn {
+            transition: all 0.3s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; }
+        }
+
+        /* شاشة التحميل */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        /* الإشعارات */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            z-index: 10000;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        @keyframes slideDown {
+            from { top: -100px; opacity: 0; }
+            to { top: 20px; opacity: 1; }
+        }
+
+        .notification.success { background: #27ae60; }
+        .notification.error { background: #e74c3c; }
+        .notification.warning { background: #f39c12; }
+        .notification.info { background: #3498db; }
+
+        /* بطاقات الإحصائيات */
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* قسم التصفية */
+        .filters-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .filters-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-input, .filter-select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        /* أزرار التحكم */
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: 15px; /* مسافة من العناصر الأخرى */
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .backup-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .backup-btn:hover {
+            background: #8e44ad;
+        }
+
+        /* شبكة التقارير */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* زر إعادة التعيين */
+        .reset-btn {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .reset-btn:hover {
+            background: #7f8c8d;
+        }
+
+        /* شعار جامعة أسيوط */
+        .university-logo {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-right: 10px;
+        }
+
+        /* زر الاتصال */
+        .contact-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .contact-btn:hover {
+            background: #219653;
+        }
+        
+        /* تحذير الصلاحية */
+        .permission-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        
+        /* حقل اختيار الكلية في تسجيل الدخول */
+        .college-selection {
+            display: none; /* مخفي افتراضياً */
+        }
+
+        /* تحسينات للشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+            }
+            
+            .header h1 {
+                font-size: 1.4em;
+                order: 1;
+                width: 100%;
+                margin-bottom: 10px;
+                justify-content: center;
+            }
+            
+            .header-user-section {
+                order: 2;
+                width: 100%;
+                justify-content: center;
+                margin: 10px 0;
+            }
+            
+            .header-controls {
+                order: 3;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .doc-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        /* نافذة استبدال المستند */
+        .replace-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .replace-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* نافذة معاينة المستند */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .preview-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: auto;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .preview-iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        
+        <div class="login-box">
+            <h2>تسجيل الدخول - نظام إدارة ضبط الوثائق الذكي</h2>
+            <div class="university-logo">جامعة أسيوط</div>
+            <div class="form-group">
+                <label for="login-username">اسم المستخدم:</label>
+                <input type="text" id="login-username" placeholder="مثال: college_sec" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">كلمة المرور:</label>
+                <input type="password" id="login-password" placeholder="123456" required>
+            </div>
+            
+            <!-- حقل اختيار الكلية - يظهر فقط للأمناء وموظفي الكليات -->
+            <div id="college-selection" class="form-group college-selection">
+                <label for="user-college">الكلية / الإدارة التابع لها:</label>
+                <select id="user-college">
+                    <option value="">اختر الكلية/الإدارة</option>
+                    <optgroup label="=== الوحدات الإدارية ===">
+                        <option value="إدارة الجودة والتميز">إدارة الجودة والتميز</option>
+                        <option value="الشؤون الإدارية">الشؤون الإدارية</option>
+                        <option value="الإدارة العامة لشؤون الطلاب">الإدارة العامة لشؤون الطلاب</option>
+                        <option value="المكتب الفني لرئيس الجامعة">المكتب الفني لرئيس الجامعة</option>
+                        <option value="قسم الجودة">قسم الجودة</option>
+                        <option value="قسم تكافؤ الفرص">قسم تكافؤ الفرص</option>
+                        <option value="قسم التميز">قسم التميز</option>
+                        <option value="قسم الدعم اللوجستي">قسم الدعم اللوجستي</option>
+                        <option value="الإدارة العامة لنظم المعلومات والتحول الرقمي">الإدارة العامة لنظم المعلومات والتحول الرقمي</option>
+                        <option value="مركز تطوير نظم المعلومات الإدارية">مركز تطوير نظم المعلومات الإدارية</option>
+                        <option value="الإدارة العامة للتطوير المؤسسي">الإدارة العامة للتطوير المؤسسي</option>
+                    </optgroup>
+                    <optgroup label="=== الكليات والمعاهد ===">
+                        <option value="كلية الطب البشري">كلية الطب البشري</option>
+                        <option value="كلية الهندسة">كلية الهندسة</option>
+                        <option value="كلية العلوم">كلية العلوم</option>
+                        <option value="كلية الصيدلة">كلية الصيدلة</option>
+                        <option value="كلية الطب البيطري">كلية الطب البيطري</option>
+                        <option value="كلية الزراعة">كلية الزراعة</option>
+                        <option value="كلية التجارة">كلية التجارة</option>
+                        <option value="كلية التربية">كلية التربية</option>
+                        <option value="كلية الحقوق">كلية الحقوق</option>
+                        <option value="كلية الآداب">كلية الآداب</option>
+                        <option value="كلية الحاسبات والمعلومات">كلية الحاسبات والمعلومات</option>
+                        <option value="كلية التمريض">كلية التمريض</option>
+                        <option value="كلية التربية الرياضية">كلية التربية الرياضية</option>
+                        <option value="كلية الخدمة الاجتماعية">كلية الخدمة الاجتماعية</option>
+                        <option value="كلية التربية النوعية">كلية التربية النوعية</option>
+                        <option value="كلية طب الأسنان">كلية طب الأسنان</option>
+                        <option value="كلية الفنون الجميلة">كلية الفنون الجميلة</option>
+                        <option value="كلية التربية للطفولة المبكرة">كلية التربية للطفولة المبكرة</option>
+                        <option value="كلية تكنولوجيا صناعة السكر والصناعات التكاملية">كلية تكنولوجيا صناعة السكر والصناعات التكاملية</option>
+                        <option value="معهد جنوب مصر للأورام">معهد جنوب مصر للأورام</option>
+                        <option value="معهد دراسات البيولوجيا الجزيئية">معهد دراسات البيولوجيا الجزيئية</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <button onclick="login()" class="submit-btn" style="width: 100%;">تسجيل الدخول</button>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #555;">للتجربة: استخدم أي اسم مستخدم من القائمة أدناه مع كلمة المرور <b>123456</b></p>
+            
+            <p style="text-align: right; margin-top: 20px; font-size: 0.8em; color: #888; border-top: 1px dashed #eee; padding-top: 10px;">
+                <b>حسابات التجربة:</b><br>
+                - <b>dept_official</b> (مسؤول الكلية/الإدارة)<br>
+                - <b>college_sec</b> (أمين الكلية - سيظهر اختيار الكلية)<br>
+                - <b>quality_admin</b> (مسؤول ضبط الوثائق)<br>
+                - <b>quality_manager</b> (مدير الجودة)<br>
+                - <b>sec_general</b> (أمين الجامعة)<br>
+                - <b>print_shop</b> (مسؤول المطبعة)<br>
+                - <b>admin</b> (محمد العدوى - مدير النظام - كلمة المرور: admin)
+            </p>
+
+            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;">
+                <h4 style="color: var(--primary-color); margin-bottom: 10px;">📞 الدعم الفني</h4>
+                <p style="margin: 5px 0; font-size: 0.9em;">للاستفسارات والدعم الفني:</p>
+                <div class="support-phone">01000778974</div>
+                <p style="margin: 5px 0; font-size: 0.8em; color: #666;">متاح خلال أوقات العمل الرسمية</p>
+            </div>
+        </div>
+        
+        <div id="preview-pane">
+            <h3>شكل وثيقة نظام إدارة الجودة</h3>
+            <p style="color: #6c757d; margin-bottom: 20px;">معاينة افتراضية لتوجيه المستخدمين.</p>
+            
+            <div style="border: 2px dashed #004a99; padding: 20px; width: 90%; height: 75%; background-color: #fcfcfc; position: relative; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
+                <h4 style="color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px; text-align: center;">النموذج الرسمي (ISO Compliant)</h4>
+                <div style="text-align: right; padding: 10px; border: 1px solid #eee; background-color: #fff; margin-top: 15px; font-size: 0.9em;">
+                    <p style="margin-bottom: 5px;"><strong>اسم الوثيقة:</strong> نموذج اعتماد طلب طباعة / إصدار رقم 02</p>
+                    <p style="margin-bottom: 5px;"><strong>جهة الإصدار:</strong> إدارة الجودة والتميز - جامعة أسيوط</p>
+                    <p><strong>حالة الوثيقة:</strong> إلكتروني وقيد التداول</p>
+                </div>
+                <p style="text-align: center; margin-top: 50px; color: #555; font-style: italic;">[محتوى الوثيقة التفصيلي والبيانات المعتمدة]</p>
+                <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; border-top: 1px solid #aaa; padding-top: 10px; font-size: 0.8em; text-align: center;">
+                    <p>سلسلة التوقيعات الإلكترونية المعتمدة: أمين الكلية ➡️ مسؤول ضبط الوثائق ➡️ مدير الجودة ➡️ أمين الجامعة</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- نافذة استبدال المستند -->
+    <div id="replace-modal" class="replace-modal">
+        <div class="replace-modal-content">
+            <h3>استبدال المستند</h3>
+            <p>يرجى رفع المستند المعدل طبقاً للمواصفة القياسية:</p>
+            <input type="file" id="new-document-file" accept=".pdf, .docx" style="margin: 15px 0; width: 100%; padding: 10px;">
+            <div class="modal-buttons">
+                <button onclick="confirmReplace()" class="submit-btn">✅ تأكيد الاستبدال</button>
+                <button onclick="cancelReplace()" class="logout-btn">❌ إلغاء</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- نافذة معاينة المستند -->
+    <div id="preview-modal" class="preview-modal">
+        <div class="preview-modal-content">
+            <div class="preview-header">
+                <h3 id="preview-title">معاينة المستند</h3>
+                <button onclick="closePreview()" class="logout-btn" style="margin: 0;">❌ إغلاق</button>
+            </div>
+            <div id="preview-content">
+                <!-- سيتم تحميل محتوى المستند هنا -->
+            </div>
+            <div class="preview-actions">
+                <button onclick="downloadCurrentDocument()" class="download-btn">📥 تحميل المستند</button>
+                <button onclick="printCurrentDocument()" class="submit-btn">🖨️ طباعة</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="main-content">
+
+        <header class="header">
+            <h1>
+                <span class="header-logo flag-emblem">🇪🇬</span> 
+                
+                <span class="header-logo vision-emblem">رؤية 2030</span>
+
+                <span class="icon">📝✅</span>
+                نظام إدارة ضبط الوثائق الذكي
+                <span class="university-logo">| جامعة أسيوط</span>
+            </h1>
+            
+            <div class="header-user-section">
+                <div class="user-avatar" id="user-avatar">👤</div>
+                <div class="user-info">
+                    <div class="user-name" id="user-display-name">مرحباً، (يرجى تسجيل الدخول)</div>
+                    <div class="user-role" id="user-display-role"></div>
+                </div>
+            </div>
+            
+            <div class="header-controls">
+                <!-- زر تسجيل الخروج في أقصى اليسار -->
+                <button onclick="logout()" class="logout-btn">🚪 تسجيل الخروج</button>
+                
+                <!-- بقية عناصر التحكم -->
+                <a href="tel:01000778974" class="contact-btn">📞 الدعم الفني</a>
+                <span class="visitor-counter">
+                    👤 الزوار: <b id="visitor-count">0</b>
+                </span>
+            </div>
+        </header>
+
+        <div class="container">
+            <section class="form-section">
+                <h2>تقديم طلب طباعة جديد (الميزة غير متاحة لدوركم)</h2> 
+                <p style="margin-bottom: 15px; color: #e74c3c; font-weight: bold;">يُرجى العلم أن مهمتكم في النظام هي المراجعة والتوقيع/الطباعة فقط. تقديم الطلبات يتم من أدوار أخرى.</p>
+                
+                <form id="print-request-form">
+                    <div class="form-group">
+                        <label for="requester-name">اسم الموظف المسؤول (المرسل):</label>
+                        <input type="text" id="requester-name" name="requester-name" required value="أحمد محمد">
+                    </div>
+                    <div class="form-group">
+                        <label for="college-name">الكلية / الإدارة الطالبة:</label>
+                        <select id="college-name" name="college-name" required>
+                            <option value="">اختر الكلية/الإدارة</option>
+                            <optgroup label="=== الوحدات الإدارية ===">
+                                <option value="إدارة الجودة والتميز" selected>إدارة الجودة والتميز</option>
+                                <option value="الشؤون الإدارية">الشؤون الإدارية</option>
+                                <option value="الإدارة العامة لشؤون الطلاب">الإدارة العامة لشؤون الطلاب</option>
+                                <option value="المكتب الفني لرئيس الجامعة">المكتب الفني لرئيس الجامعة</option>
+                                <option value="قسم الجودة">قسم الجودة</option>
+                                <option value="قسم تكافؤ الفرص">قسم تكافؤ الفرص</option>
+                                <option value="قسم التميز">قسم التميز</option>
+                                <option value="قسم الدعم اللوجستي">قسم الدعم اللوجستي</option>
+                                <option value="الإدارة العامة لنظم المعلومات والتحول الرقمي">الإدارة العامة لنظم المعلومات والتحول الرقمي</option>
+                                <option value="مركز تطوير نظم المعلومات الإدارية">مركز تطوير نظم المعلومات الإدارية</option>
+                                <option value="الإدارة العامة للتطوير المؤسسي">الإدارة العامة للتطوير المؤسسي</option>
+                            </optgroup>
+                            <optgroup label="=== الكليات والمعاهد ===">
+                                <option value="كلية الطب البشري">كلية الطب البشري</option>
+                                <option value="كلية الهندسة">كلية الهندسة</option>
+                                <option value="كلية العلوم">كلية العلوم</option>
+                                <option value="كلية الصيدلة">كلية الصيدلة</option>
+                                <option value="كلية الطب البيطري">كلية الطب البيطري</option>
+                                <option value="كلية الزراعة">كلية الزراعة</option>
+                                <option value="كلية التجارة">كلية التجارة</option>
+                                <option value="كلية التربية">كلية التربية</option>
+                                <option value="كلية الحقوق">كلية الحقوق</option>
+                                <option value="كلية الآداب">كلية الآداب</option>
+                                <option value="كلية الحاسبات والمعلومات">كلية الحاسبات والمعلومات</option>
+                                <option value="كلية التمريض">كلية التمريض</option>
+                                <option value="كلية التربية الرياضية">كلية التربية الرياضية</option>
+                                <option value="كلية الخدمة الاجتماعية">كلية الخدمة الاجتماعية</option>
+                                <option value="كلية التربية النوعية">كلية التربية النوعية</option>
+                                <option value="كلية طب الأسنان">كلية طب الأسنان</option>
+                                <option value="كلية الفنون الجميلة">كلية الفنون الجميلة</option>
+                                <option value="كلية التربية للطفولة المبكرة">كلية التربية للطفولة المبكرة</option>
+                                <option value="كلية تكنولوجيا صناعة السكر والصناعات التكاملية">كلية تكنولوجيا صناعة السكر والصناعات التكاملية</option>
+                                <option value="معهد جنوب مصر للأورام">معهد جنوب مصر للأورام</option>
+                                <option value="معهد دراسات البيولوجيا الجزيئية">معهد دراسات البيولوجيا الجزيئية</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="whatsapp-number">رقم الواتساب للتواصل:</label>
+                        <input type="text" id="whatsapp-number" name="whatsapp-number" required value="01xxxxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label for="document-file">إرفاق المستندات للطباعة (ملف):</label>
+                        <input type="file" id="document-file" name="document-file" accept=".pdf, .docx" required onchange="handleFileUpload(event)">
+                        <small>يرجى إرفاق ملفات PDF أو Word فقط. (سيتم حفظ الملف فعلياً في النظام)</small>
+                    </div>
+                    <button type="submit" class="submit-btn">إرسال طلب الطباعة</button>
+                </form>
+            </section>
+
+            <hr style="margin: 40px 0; border-color: #eee;">
+
+            <!-- قسم الإحصائيات الجديد -->
+            <section class="reports-section">
+                <h2>📊 الإحصائيات والتقارير</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div style="font-size: 2em; color: var(--primary-color);">📈</div>
+                        <h3 style="color: var(--primary-color);">إجمالي الطلبات</h3>
+                        <p id="total-requests" style="font-size: 1.5em; font-weight: bold;">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <div style="font-size: 2em; color: #f39c12;">⏳</div>
+                        <h3 style="color: #f39c12;">قيد المعالجة</h3>
+                        <p id="pending-requests" style="font-size: 1.5em; font-weight: bold;">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <div style="font-size: 2em; color: #27ae60;">✅</div>
+                        <h3 style="color: #27ae60;">مكتمل</h3>
+                        <p id="completed-requests" style="font-size: 1.5em; font-weight: bold;">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <div style="font-size: 2em; color: #3498db;">🔄</div>
+                        <h3 style="color: #3498db;">في المراجعة</h3>
+                        <p id="review-requests" style="font-size: 1.5em; font-weight: bold;">0</p>
+                    </div>
+                </div>
+                
+                <!-- أزرار النسخ الاحتياطي -->
+                <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="exportData()" class="backup-btn">💾 تصدير البيانات</button>
+                    <button onclick="document.getElementById('import-file').click()" class="backup-btn">📁 استيراد البيانات</button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(event)">
+                </div>
+            </section>
+
+            <hr style="margin: 40px 0; border-color: #eee;">
+
+            <section class="status-section">
+                <h2>تتبع حالة طلبات الطباعة (آخر تزامن: <span id="last-sync-time">---</span>)</h2>
+                
+                <!-- تحذير الصلاحية لأمناء الكليات -->
+                <div id="college-sec-warning" class="permission-warning" style="display: none;">
+                    <strong>ملاحظة هامة:</strong> يمكنك التوقيع فقط على طلبات كليتك (<span id="user-college-name"></span>) ولا يمكنك التوقيع على طلبات الكليات الأخرى.
+                </div>
+                
+                <p style="margin-bottom: 15px;">**للتجربة:** زر **"التوقيع / المتابعة"** يظهر فقط لدور المستخدم الذي قام بتسجيل الدخول.</p>
+                
+                <!-- قسم التصفية والبحث الجديد -->
+                <div class="filters-section">
+                    <div class="filters-container">
+                        <input type="text" id="search-requests" class="search-input" placeholder="🔍 بحث برقم الطلب أو اسم الكلية...">
+                        <select id="status-filter" class="filter-select">
+                            <option value="">جميع الحالات</option>
+                            <option value="Pending">قيد المراجعة</option>
+                            <option value="DCO_Review">لدى ضبط الوثائق</option>
+                            <option value="Quality_Manager">لدى مدير الجودة</option>
+                            <option value="Secretary_General">لدى أمين الجامعة</option>
+                            <option value="Approved_To_Print">جاهز للطباعة</option>
+                            <option value="Printed">مكتمل</option>
+                        </select>
+                        <button onclick="resetFilters()" class="reset-btn">🔄 إعادة تعيين</button>
+                    </div>
+                </div>
+                
+                <table class="status-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>الكلية / الإدارة</th>
+                            <th>تاريخ الطلب</th>
+                            <th>الحالة الحالية</th>
+                            <th>الإجراء (المطلوب)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requests-list">
+                        </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="footer-info">
+            <p>© <b>حقوق الملكية الفكرية محفوظة</b>. إدارة الجودة والتميز: <b>جامعة أسيوط</b></p>
+            <p>نظام إلكتروني لإدارة المطبوعات - وفق متطلبات ISO 9001:2015</p>
+            <p class="support-note">
+                **للدعم الفني والاستفسارات: <span class="support-phone">01000778974</span>**
+            </p>
+        </div>
+        <button id="sync-button" class="sync-btn" onclick="synchronizeData()">
+            🔄 تزامن البيانات يدويًا
+        </button>
+    </footer>
+
+    <script>
+        // **الجزء الأول: تعريف المستخدمين والدور الحالي**
+        const mockUsers = [
+            { username: 'dept_official', password: '123456', role: 'Dept_Official', name: 'مسؤول الكلية/الإدارة', requiresCollege: true, avatar: '👨‍💼' },
+            { username: 'quality_admin', password: '123456', role: 'DCO', name: 'مسؤول ضبط الوثائق', requiresCollege: false, avatar: '👨‍🔧' },
+            { username: 'college_sec', password: '123456', role: 'College_Secretary', name: 'أمين الكلية', requiresCollege: true, avatar: '👩‍💻' },
+            { username: 'quality_manager', password: '123456', role: 'Quality_Manager', name: 'مدير الجودة', requiresCollege: false, avatar: '👨‍💼' },
+            { username: 'sec_general', password: '123456', role: 'Secretary_General', name: 'أمين الجامعة', requiresCollege: false, avatar: '👨‍🎓' },
+            { username: 'print_shop', password: '123456', role: 'Print_Shop', name: 'مسؤول المطبعة', requiresCollege: false, avatar: '👨‍🏭' },
+            { username: 'admin', password: 'admin', role: 'Super_Admin', name: 'محمد العدوى (مدير النظام)', requiresCollege: false, avatar: '👑' }
+        ];
+
+        let currentUserRole = null; 
+        let currentUserName = null;
+        let currentUserCollege = null;
+        let currentRequestId = null; // لتخزين رقم الطلب الحالي للاستبدال
+        let currentPreviewDocument = null; // لتخزين المستند الحالي للمعاينة
+
+        // **التحقق من نوع المستخدم وإظهار/إخفاء حقل الكلية**
+        document.getElementById('login-username').addEventListener('input', function() {
+            const username = this.value.trim();
+            const collegeSelection = document.getElementById('college-selection');
+            const userCollegeSelect = document.getElementById('user-college');
+            
+            const user = mockUsers.find(u => u.username.toLowerCase() === username.toLowerCase());
+            
+            if (user && user.requiresCollege) {
+                collegeSelection.style.display = 'block';
+                userCollegeSelect.required = true;
+            } else {
+                collegeSelection.style.display = 'none';
+                userCollegeSelect.required = false;
+                userCollegeSelect.value = '';
+            }
+        });
+
+        // **نظام الإشعارات المحسن**
+        function showNotification(message, type = 'success', duration = 5000) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, duration);
+        }
+
+        // **دالة تسجيل الدخول**
+        function login() {
+            const usernameInput = document.getElementById('login-username').value.trim();
+            const passwordInput = document.getElementById('login-password').value.trim();
+            const userCollegeInput = document.getElementById('user-college').value;
+            
+            if (usernameInput === '' || passwordInput === '') {
+                showNotification('🚫 خطأ في الإدخال: يرجى إدخال اسم المستخدم وكلمة المرور.', 'error');
+                return;
+            }
+
+            const user = mockUsers.find(u => 
+                u.username.toLowerCase() === usernameInput.toLowerCase() && 
+                u.password === passwordInput
+            );
+
+            if (user) {
+                // التحقق من اختيار الكلية للمستخدمين المطلوب منهم ذلك
+                if (user.requiresCollege && userCollegeInput === '') {
+                    showNotification('🚫 يرجى اختيار الكلية/الإدارة التابع لها.', 'error');
+                    return;
+                }
+
+                currentUserRole = user.role;
+                currentUserName = user.name;
+                currentUserCollege = user.requiresCollege ? userCollegeInput : '';
+                
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                
+                // تحديث معلومات المستخدم في الرأس
+                updateUserDisplay(user);
+                
+                const formElement = document.getElementById('print-request-form');
+                const formTitle = document.querySelector('.form-section h2');
+                const formNotice = document.querySelector('.form-section p');
+                
+                if (user.role === 'Dept_Official') {
+                    if (formTitle) formTitle.textContent = 'تقديم طلب طباعة جديد';
+                    if (formNotice) formNotice.style.display = 'none';
+                    if (formElement) formElement.style.display = 'block';
+                } else {
+                    if (formTitle) formTitle.textContent = 'تقديم طلب طباعة جديد (الميزة غير متاحة لدوركم)';
+                    if (formNotice) formNotice.style.display = 'block';
+                    if (formElement) formElement.style.display = 'none';
+                }
+
+                // إظهار تحذير الصلاحية لأمناء الكليات
+                if (user.role === 'College_Secretary') {
+                    document.getElementById('college-sec-warning').style.display = 'block';
+                    document.getElementById('user-college-name').textContent = currentUserCollege;
+                } else {
+                    document.getElementById('college-sec-warning').style.display = 'none';
+                }
+
+                setUserSession(user);
+                renderRequests();
+                updateStatistics();
+                setupFilters();
+                showNotification(`✅ تم تسجيل الدخول بنجاح كـ: ${user.name}${user.requiresCollege ? ' - ' + currentUserCollege : ''}`);
+            } else {
+                showNotification('❌ خطأ في بيانات الدخول: اسم المستخدم أو كلمة المرور غير صحيحين. يرجى التأكد من البيانات والمحاولة مجدداً.', 'error');
+            }
+        }
+
+        // **دالة تحديث عرض معلومات المستخدم**
+        function updateUserDisplay(user) {
+            const userAvatar = document.getElementById('user-avatar');
+            const userName = document.getElementById('user-display-name');
+            const userRole = document.getElementById('user-display-role');
+            
+            userAvatar.textContent = user.avatar || '👤';
+            userName.textContent = user.name;
+            userRole.textContent = `${user.role}${currentUserCollege ? ' - ' + currentUserCollege : ''}`;
+        }
+
+        // **نظام الجلسات والأمان**
+        function setUserSession(user) {
+            const sessionData = {
+                user: user,
+                userCollege: currentUserCollege,
+                loginTime: new Date().toISOString(),
+                expires: Date.now() + (8 * 60 * 60 * 1000) // 8 ساعات
+            };
+            localStorage.setItem('currentSession', JSON.stringify(sessionData));
+        }
+
+        function checkSession() {
+            const sessionData = localStorage.getItem('currentSession');
+            if (!sessionData) return false;
+            
+            const session = JSON.parse(sessionData);
+            if (Date.now() > session.expires) {
+                localStorage.removeItem('currentSession');
+                return false;
+            }
+            
+            currentUserCollege = session.userCollege;
+            return session.user;
+        }
+
+        function autoLogout() {
+            setInterval(() => {
+                const user = checkSession();
+                if (!user) {
+                    showNotification('انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى', 'warning');
+                    logout();
+                }
+            }, 60000); // التحقق كل دقيقة
+        }
+
+        function logout() {
+            localStorage.removeItem('currentSession');
+            currentUserRole = null;
+            currentUserName = null;
+            currentUserCollege = null;
+            
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('main-content').style.display = 'none';
+            
+            // إعادة تعيين حقول الدخول
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('user-college').value = '';
+            document.getElementById('college-selection').style.display = 'none';
+            
+            showNotification('تم تسجيل الخروج بنجاح', 'success');
+        }
+
+        // دالة لتحميل البيانات من الذاكرة المحلية (localStorage) - تستخدم المفتاح printRequests2
+        function loadRequests() {
+            const storedRequests = localStorage.getItem('printRequests2');
+            return storedRequests ? JSON.parse(storedRequests) : [];
+        }
+
+        // دالة لحفظ البيانات في الذاكرة المحلية - تستخدم المفتاح printRequests2
+        function saveRequests(requests) {
+            localStorage.setItem('printRequests2', JSON.stringify(requests));
+        }
+
+        // **دالة لإنشاء بيانات أولية في حال لم يتم إرسال أي طلب**
+        function initializeRequests() {
+            let requests = loadRequests();
+            if (requests.length === 0) {
+                const newDate = new Date().toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                const initialRequests = [
+                    {
+                        id: 1001,
+                        requester: 'أحمد محمد',
+                        college: 'كلية الهندسة',
+                        whatsapp: '01xxxxxxxxx',
+                        date: newDate,
+                        status: 'Pending', // يبدأ في انتظار توقيع College_Secretary
+                        documentPath: `docs/print_request_1001_${Date.now()}.pdf`,
+                        documentFile: null,
+                        documentHistory: []
+                    },
+                    {
+                        id: 1002,
+                        requester: 'فاطمة علي',
+                        college: 'كلية الطب البشري',
+                        whatsapp: '01xxxxxxxxx',
+                        date: newDate,
+                        status: 'DCO_Review', // لدى مسؤول ضبط الوثائق
+                        documentPath: `docs/print_request_1002_${Date.now()}.pdf`,
+                        documentFile: null,
+                        documentHistory: []
+                    },
+                    {
+                        id: 1003,
+                        requester: 'محمد إبراهيم',
+                        college: 'كلية العلوم',
+                        whatsapp: '01xxxxxxxxx',
+                        date: newDate,
+                        status: 'Approved_To_Print', // ينتظر توقيع Print_Shop
+                        documentPath: `docs/print_request_1003_${Date.now()}.pdf`,
+                        documentFile: null,
+                        documentHistory: []
+                    },
+                ];
+                saveRequests(initialRequests);
+            }
+        }
+
+        // **دالة عداد الزوار**
+        function initializeVisitorCounter() {
+            let count = localStorage.getItem('visitorCount');
+            if (count === null) {
+                count = 1;
+            } else {
+                count = parseInt(count) + 1;
+            }
+            
+            localStorage.setItem('visitorCount', count);
+            
+            const countElement = document.getElementById('visitor-count');
+            if (countElement) {
+                countElement.textContent = count;
+            }
+        }
+
+        // **دالة تحديد تفاصيل الحالة**
+        function getStatusDetails(status) {
+            let details = {};
+            switch(status) {
+                case 'Pending':
+                    details = { class: 'status-pending', text: 'قيد مراجعة أمين الكلية', nextRole: 'College_Secretary', nextStatus: 'DCO_Review' };
+                    break;
+                case 'DCO_Review':
+                    details = { class: 'status-pending', text: 'لدى مسؤول ضبط الوثائق (للتعديل والمراجعة)', nextRole: 'DCO', nextStatus: 'Quality_Manager' };
+                    break;
+                case 'Quality_Manager':
+                    details = { class: 'status-approved', text: 'في انتظار توقيع مدير الجودة والتميز', nextRole: 'Quality_Manager', nextStatus: 'Secretary_General' };
+                    break;
+                case 'Secretary_General':
+                    details = { class: 'status-approved', text: 'في انتظار توقيع أمين الجامعة (التوقيع النهائي)', nextRole: 'Secretary_General', nextStatus: 'Approved_To_Print' };
+                    break;
+                case 'Approved_To_Print':
+                    details = { class: 'status-printed', text: 'تم الاعتماد الإلكتروني - لدى المطبعة الآن', nextRole: 'Print_Shop', nextStatus: 'Printed' };
+                    break;
+                case 'Printed':
+                    details = { class: 'status-completed', text: 'تم الطباعة - يرجى التوجه للاستلام ✅', nextRole: 'College_Secretary', nextStatus: 'Pending' }; 
+                    break;
+                default:
+                    details = { class: 'status-pending', text: 'قيد الانتظار', nextRole: null, nextStatus: null };
+                    break;
+            }
+            return details;
+        }
+        
+        // **دالة معاينة المستند**
+        function previewDocument(requestId) {
+            const requests = loadRequests();
+            const request = requests.find(req => req.id == requestId);
+            
+            if (!request) {
+                showNotification('❌ لم يتم العثور على المستند', 'error');
+                return;
+            }
+            
+            if (!request.documentFile) {
+                showNotification('❌ لا يوجد مستند مرفق لهذا الطلب', 'error');
+                return;
+            }
+            
+            currentPreviewDocument = request;
+            document.getElementById('preview-title').textContent = `معاينة المستند - الطلب رقم ${requestId}`;
+            
+            const previewContent = document.getElementById('preview-content');
+            previewContent.innerHTML = '';
+            
+            if (request.documentFile.type.includes('pdf')) {
+                // معاينة PDF
+                const objectEl = document.createElement('object');
+                objectEl.data = URL.createObjectURL(request.documentFile);
+                objectEl.type = 'application/pdf';
+                objectEl.style.width = '100%';
+                objectEl.style.height = '500px';
+                previewContent.appendChild(objectEl);
+            } else if (request.documentFile.type.includes('word')) {
+                // معاينة Word (نص فقط)
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    const pre = document.createElement('pre');
+                    pre.style.whiteSpace = 'pre-wrap';
+                    pre.style.fontFamily = 'Cairo, Arial, sans-serif';
+                    pre.style.padding = '15px';
+                    pre.style.backgroundColor = '#f8f9fa';
+                    pre.style.borderRadius = '5px';
+                    pre.style.maxHeight = '500px';
+                    pre.style.overflow = 'auto';
+                    pre.textContent = text;
+                    previewContent.appendChild(pre);
+                };
+                reader.readAsText(request.documentFile);
+            } else {
+                previewContent.innerHTML = '<p style="text-align: center; color: #666; padding: 50px;">لا يمكن معاينة هذا النوع من الملفات. يرجى تحميل الملف لعرضه.</p>';
+            }
+            
+            document.getElementById('preview-modal').style.display = 'flex';
+        }
+        
+        // **دالة إغلاق المعاينة**
+        function closePreview() {
+            document.getElementById('preview-modal').style.display = 'none';
+            currentPreviewDocument = null;
+        }
+        
+        // **دالة تحميل المستند الحالي**
+        function downloadCurrentDocument() {
+            if (!currentPreviewDocument || !currentPreviewDocument.documentFile) {
+                showNotification('❌ لا يوجد مستند للتحميل', 'error');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(currentPreviewDocument.documentFile);
+            link.download = `طلب_${currentPreviewDocument.id}_${currentPreviewDocument.documentFile.name}`;
+            link.click();
+            showNotification('✅ جاري تحميل المستند', 'success');
+        }
+        
+        // **دالة طباعة المستند الحالي**
+        function printCurrentDocument() {
+            if (!currentPreviewDocument || !currentPreviewDocument.documentFile) {
+                showNotification('❌ لا يوجد مستند للطباعة', 'error');
+                return;
+            }
+            
+            if (currentPreviewDocument.documentFile.type.includes('pdf')) {
+                const pdfUrl = URL.createObjectURL(currentPreviewDocument.documentFile);
+                const printWindow = window.open(pdfUrl);
+                printWindow.onload = function() {
+                    printWindow.print();
+                };
+            } else {
+                showNotification('ℹ️ يمكن طباعة ملفات PDF فقط مباشرة من المتصفح', 'info');
+            }
+        }
+        
+        // **دالة تحميل المستند**
+        function downloadDocument(requestId) {
+            const requests = loadRequests();
+            const request = requests.find(req => req.id == requestId);
+            
+            if (!request || !request.documentFile) {
+                showNotification('❌ لا يوجد مستند للتحميل', 'error');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(request.documentFile);
+            link.download = `طلب_${request.id}_${request.documentFile.name}`;
+            link.click();
+            showNotification('✅ تم تحميل المستند بنجاح', 'success');
+        }
+        
+        // **دالة فتح نافذة استبدال المستند**
+        function openReplaceModal(requestId) {
+            currentRequestId = requestId;
+            document.getElementById('replace-modal').style.display = 'flex';
+            document.getElementById('new-document-file').value = '';
+        }
+        
+        // **دالة إلغاء الاستبدال**
+        function cancelReplace() {
+            document.getElementById('replace-modal').style.display = 'none';
+            currentRequestId = null;
+        }
+        
+        // **دالة تأكيد استبدال المستند**
+        function confirmReplace() {
+            const newFile = document.getElementById('new-document-file').files[0];
+            
+            if (!newFile) {
+                showNotification('🚫 يرجى اختيار ملف جديد للاستبدال', 'error');
+                return;
+            }
+            
+            // التحقق من نوع الملف
+            const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowedTypes.includes(newFile.type)) {
+                showNotification('🚫 يرجى رفع ملف PDF أو Word فقط', 'error');
+                return;
+            }
+            
+            // التحقق من الحجم (10MB كحد أقصى)
+            if (newFile.size > 10 * 1024 * 1024) {
+                showNotification('🚫 حجم الملف يجب أن يكون أقل من 10MB', 'error');
+                return;
+            }
+            
+            let requests = loadRequests();
+            const index = requests.findIndex(req => req.id == currentRequestId);
+            
+            if (index === -1) {
+                showNotification('❌ خطأ: لم يتم العثور على الطلب', 'error');
+                return;
+            }
+            
+            // حفظ المستند القديم في السجل
+            const oldDocument = {
+                path: requests[index].documentPath,
+                fileName: requests[index].documentFile ? requests[index].documentFile.name : 'غير معروف',
+                replacedAt: new Date().toLocaleString('ar-EG')
+            };
+            
+            if (!requests[index].documentHistory) {
+                requests[index].documentHistory = [];
+            }
+            requests[index].documentHistory.push(oldDocument);
+            
+            // تحديث المستند الجديد
+            requests[index].documentFile = newFile;
+            requests[index].documentPath = `docs/print_request_${currentRequestId}_v${requests[index].documentHistory.length + 1}_${Date.now()}.${newFile.type.includes('pdf') ? 'pdf' : 'docx'}`;
+            
+            saveRequests(requests);
+            
+            showNotification(`✅ تم استبدال المستند بنجاح طبقاً للمواصفة القياسية\nالإصدار الجديد: ${newFile.name}`, 'success');
+            document.getElementById('replace-modal').style.display = 'none';
+            renderRequests();
+        }
+        
+        // **دالة حذف المستند**
+        function deleteDocument(requestId) {
+            if (!confirm('⚠️ هل أنت متأكد من حذف المستند؟ سيتم فقدان جميع البيانات المرتبطة به.')) {
+                return;
+            }
+            
+            let requests = loadRequests();
+            const index = requests.findIndex(req => req.id == requestId);
+            
+            if (index === -1) {
+                showNotification('❌ خطأ: لم يتم العثور على الطلب', 'error');
+                return;
+            }
+            
+            // حفظ المستند المحذوف في السجل
+            const deletedDocument = {
+                path: requests[index].documentPath,
+                fileName: requests[index].documentFile ? requests[index].documentFile.name : 'غير معروف',
+                deletedAt: new Date().toLocaleString('ar-EG'),
+                action: 'deleted'
+            };
+            
+            if (!requests[index].documentHistory) {
+                requests[index].documentHistory = [];
+            }
+            requests[index].documentHistory.push(deletedDocument);
+            
+            // حذف المستند الحالي
+            requests[index].documentFile = null;
+            requests[index].documentPath = null;
+            
+            saveRequests(requests);
+            
+            showNotification('✅ تم حذف المستند بنجاح', 'success');
+            renderRequests();
+        }
+
+        // **دالة التحقق من صلاحية أمين الكلية**
+        function checkCollegeSecretaryPermission(reqCollege) {
+            if (currentUserRole !== 'College_Secretary') {
+                return true; // الأدوار الأخرى ليس لها قيود
+            }
+            
+            return reqCollege === currentUserCollege;
+        }
+
+        // **دالة عرض الطلبات**
+        function renderRequests() {
+            if (!currentUserRole) return; 
+            
+            const requests = loadRequests().reverse(); 
+            renderFilteredRequests(requests);
+        }
+
+        function renderFilteredRequests(requests) {
+            const listBody = document.getElementById('requests-list');
+            listBody.innerHTML = '';
+            
+            if (requests.length === 0) {
+                listBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">لا توجد طلبات طباعة مقدمة حاليًا.</td></tr>';
+                return;
+            }
+
+            requests.forEach(req => {
+                const details = getStatusDetails(req.status);
+                
+                let rolesMatch = (currentUserRole === details.nextRole);
+                let hasPermission = true;
+                
+                // التحقق من صلاحية أمين الكلية
+                if (currentUserRole === 'College_Secretary' && details.nextRole === 'College_Secretary') {
+                    hasPermission = checkCollegeSecretaryPermission(req.college);
+                    if (!hasPermission) {
+                        rolesMatch = false;
+                    }
+                }
+                
+                // السماح للمسؤول العام بالتوقيع على جميع الطلبات
+                if (currentUserRole === 'Super_Admin') {
+                    rolesMatch = true;
+                    hasPermission = true;
+                }
+                
+                let actionButton = '';
+                
+                // 1. تحديد زر الإجراء (التوقيع)
+                if (rolesMatch && hasPermission) {
+                    let buttonText = '✅ توقيع / متابعة';
+                    if (details.nextStatus === 'Printed') {
+                        buttonText = 'تم الطباعة (مسؤول المطبعة)';
+                    } else if (details.nextStatus === 'Pending' && req.status === 'Printed') {
+                        buttonText = 'إعادة تعيين (للتجربة)';
+                    }
+                    actionButton = `<button onclick="simulateProcess(${req.id}, '${details.nextStatus}', '${details.nextRole}')">${buttonText}</button>`;
+                } else if (rolesMatch && !hasPermission) {
+                    // زر معطل مع رسالة توضيحية
+                    actionButton = `<button disabled title="لا يمكنك التوقيع على طلبات الكليات الأخرى">❌ غير مسموح</button>`;
+                }
+                
+                // 2. تحديد أزرار إدارة المستندات (لـ DCO و Super_Admin فقط)
+                let docManagementButtons = '';
+                if ((currentUserRole === 'DCO' || currentUserRole === 'Super_Admin') && req.documentFile) {
+                    docManagementButtons = `
+                        <div class="doc-actions">
+                            <button class="preview-btn" onclick="previewDocument(${req.id})">👁️ معاينة</button>
+                            <button class="download-btn" onclick="downloadDocument(${req.id})">📥 تحميل</button>
+                            <button class="replace-btn" onclick="openReplaceModal(${req.id})">🔄 استبدال</button>
+                            <button class="delete-btn" onclick="deleteDocument(${req.id})">🗑️ حذف</button>
+                        </div>
+                    `;
+                } else if ((currentUserRole === 'DCO' || currentUserRole === 'Super_Admin') && !req.documentFile) {
+                    docManagementButtons = `
+                        <div class="doc-actions">
+                            <button class="replace-btn" onclick="openReplaceModal(${req.id})">📄 إضافة مستند</button>
+                        </div>
+                    `;
+                } else if (req.documentFile) {
+                    // جميع المستخدمين يمكنهم معاينة وتحميل المستندات
+                    docManagementButtons = `
+                        <div class="doc-actions">
+                            <button class="preview-btn" onclick="previewDocument(${req.id})">👁️ معاينة</button>
+                            <button class="download-btn" onclick="downloadDocument(${req.id})">📥 تحميل</button>
+                        </div>
+                    `;
+                }
+
+                // 3. دمج محتوى الخلية
+                let actionCellContent = '';
+                if (actionButton) {
+                    actionCellContent = actionButton + (docManagementButtons ? `<br>${docManagementButtons}` : '');
+                } else if (docManagementButtons) {
+                    actionCellContent = docManagementButtons;
+                } else {
+                    const roleMap = {
+                        'College_Secretary': 'أمين الكلية',
+                        'DCO': 'مسؤول ضبط الوثائق',
+                        'Quality_Manager': 'مدير الجودة',
+                        'Secretary_General': 'أمين الجامعة',
+                        'Print_Shop': 'مسؤول المطبعة',
+                        'Dept_Official': 'مسؤول الكلية/الإدارة'
+                    };
+                    const requiredRoleName = roleMap[details.nextRole] || 'مسؤول آخر';
+
+                    actionCellContent = (req.status !== 'Printed') ? 
+                        `<span style="color: #6c757d; font-size: 0.9em;">(في انتظار توقيع ${requiredRoleName})</span>`
+                        : `<span style="color: #27ae60; font-weight: bold;">الطلب مكتمل</span>`;
+                }
+
+                const row = `
+                    <tr>
+                        <td>${req.id}</td>
+                        <td>${req.college}</td>
+                        <td>${req.date}</td>
+                        <td class="${details.class}">${details.text}</td>
+                        <td>${actionCellContent}</td>
+                    </tr>
+                `;
+                listBody.innerHTML += row;
+            });
+        }
+
+        // **دالة محاكاة التوقيع**
+        function simulateProcess(id, newStatus, requiredRole) {
+            // السماح للمسؤول العام بالتوقيع بغض النظر عن الدور المطلوب
+            if (currentUserRole !== 'Super_Admin') {
+                if (!currentUserRole || currentUserRole !== requiredRole) {
+                    const roleMap = {
+                        'College_Secretary': 'أمين الكلية',
+                        'DCO': 'مسؤول ضبط الوثائق',
+                        'Quality_Manager': 'مدير الجودة',
+                        'Secretary_General': 'أمين الجامعة',
+                        'Print_Shop': 'مسؤول المطبعة',
+                        'Dept_Official': 'مسؤول الكلية/الإدارة'
+                    };
+                    const requiredRoleName = roleMap[requiredRole] || 'دور غير معروف';
+
+                    showNotification(`❌ خطأ في الصلاحية: لا يمكن إتمام الإجراء. يرجى تسجيل الدخول بحساب: ${requiredRoleName} (${requiredRole})`, 'error');
+                    return;
+                }
+
+                // التحقق من صلاحية أمين الكلية
+                let requests = loadRequests();
+                const request = requests.find(req => req.id == id);
+                
+                if (currentUserRole === 'College_Secretary' && request.college !== currentUserCollege) {
+                    showNotification(`❌ خطأ في الصلاحية: لا يمكنك التوقيع على طلبات الكليات الأخرى. يمكنك التوقيع فقط على طلبات كليتك (${currentUserCollege}).`, 'error');
+                    return;
+                }
+            }
+
+            let requests = loadRequests();
+            const index = requests.findIndex(req => req.id == id);
+            if (index === -1) return;
+
+            let message;
+            requests[index].status = newStatus;
+            
+            switch(newStatus) {
+                case 'DCO_Review':
+                    message = `تم توقيع أمين الكلية بنجاح. الطلب الآن لدى مسؤول ضبط الوثائق.`;
+                    break;
+                case 'Quality_Manager':
+                    message = `مسؤول ضبط الوثائق قام بالتعديل و التوقيع. الطلب الآن لدى مدير الجودة.`;
+                    break;
+                case 'Secretary_General':
+                    message = `مدير الجودة وقع إلكترونياً. الطلب الآن لدى أمين الجامعة.`;
+                    break;
+                case 'Approved_To_Print':
+                    message = `توقيع أمين الجامعة النهائي. الطلب الآن مرسل للمطبعة إلكترونياً.`;
+                    break;
+                case 'Printed':
+                    message = `المطبعة طبعت الطلب وأكدت الإنجاز. تم إرسال إشعار للمرسل للاستلام.`;
+                    break;
+                case 'Pending':
+                    message = `تمت إعادة تعيين حالة الطلب إلى البداية.`;
+                    break;
+                default:
+                    message = `تم تحديث حالة الطلب.`;
+            }
+            
+            saveRequests(requests);
+            showNotification(`الطلب رقم ${id}:\n تم التوقيع بواسطة ${currentUserName || 'المستخدم الحالي'}.\n محاكاة: ${message}`, 'success');
+            renderRequests();
+            updateStatistics();
+        }
+
+        // معالجة نموذج التقديم
+        document.getElementById('print-request-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentUserRole) {
+                 showNotification('يرجى تسجيل الدخول أولاً لإرسال طلب طباعة جديد.', 'error');
+                 return;
+            }
+            
+            if (currentUserRole !== 'Dept_Official') {
+                showNotification('🚫 لا يمكنك إرسال طلبات طباعة بهذا الدور. يرجى استخدام دور مسؤول الكلية/الإدارة (Dept_Official).', 'error');
+                return;
+            }
+
+            const collegeName = document.getElementById('college-name').value;
+            const documentFile = document.getElementById('document-file').files[0];
+            
+            if (!documentFile) {
+                showNotification('🚫 يرجى إرفاق مستند للطباعة', 'error');
+                return;
+            }
+            
+            let requests = loadRequests();
+            const newId = (requests.length > 0) ? Math.max(...requests.map(r => r.id)) + 1 : 1001;
+            const newDate = new Date().toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            const newRequest = {
+                id: newId,
+                requester: document.getElementById('requester-name').value,
+                college: collegeName,
+                whatsapp: document.getElementById('whatsapp-number').value,
+                date: newDate,
+                status: 'Pending',
+                documentPath: `docs/print_request_${newId}_${Date.now()}.${documentFile.type.includes('pdf') ? 'pdf' : 'docx'}`,
+                documentFile: documentFile,
+                documentHistory: []
+            };
+
+            requests.push(newRequest);
+            saveRequests(requests);
+
+            showNotification(`✅ تم إرسال طلب الطباعة بنجاح! رقم الطلب: ${newId}.\nسيبدأ الآن مسار الاعتماد الإلكتروني.`, 'success');
+            this.reset(); 
+            document.getElementById('requester-name').value = "أحمد محمد";
+            document.getElementById('college-name').value = "إدارة الجودة والتميز";
+            document.getElementById('whatsapp-number').value = "01xxxxxxxxx";
+            renderRequests(); 
+            updateStatistics();
+        });
+
+        // دالة تزامن البيانات اليدوية
+        function synchronizeData() {
+            const syncTimeElement = document.getElementById('last-sync-time');
+            const currentTime = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            console.log("تزامن البيانات بدأ...");
+            document.getElementById('sync-button').disabled = true;
+            document.getElementById('sync-button').textContent = 'جاري التزامن...';
+
+            setTimeout(() => {
+                syncTimeElement.textContent = currentTime;
+                showNotification(`🔄 تم تزامن البيانات بنجاح في: ${currentTime}.`, 'info');
+                document.getElementById('sync-button').disabled = false;
+                document.getElementById('sync-button').textContent = '🔄 تزامن البيانات يدويًا';
+                console.log("تزامن البيانات انتهى.");
+            }, 1000);
+        }
+
+        // **نظام المرفقات المحسن**
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // التحقق من نوع الملف
+            const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowedTypes.includes(file.type)) {
+                showNotification('يرجى رفع ملف PDF أو Word فقط', 'error');
+                event.target.value = '';
+                return;
+            }
+            
+            // التحقق من الحجم (10MB كحد أقصى)
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification('حجم الملف يجب أن يكون أقل من 10MB', 'error');
+                event.target.value = '';
+                return;
+            }
+            
+            showNotification(`✅ تم اختيار الملف: ${file.name}`, 'success');
+        }
+
+        // **نظام البحث والتصفية**
+        function setupFilters() {
+            const searchInput = document.getElementById('search-requests');
+            const statusFilter = document.getElementById('status-filter');
+            
+            searchInput.addEventListener('input', filterRequests);
+            statusFilter.addEventListener('change', filterRequests);
+        }
+
+        function filterRequests() {
+            const searchTerm = document.getElementById('search-requests').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            
+            const requests = loadRequests();
+            const filteredRequests = requests.filter(req => {
+                const matchesSearch = req.id.toString().includes(searchTerm) || 
+                            req.college.toLowerCase().includes(searchTerm) ||
+                            req.requester.toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = statusFilter === '' || req.status === statusFilter;
+                
+                return matchesSearch && matchesStatus;
+            });
+            
+            renderFilteredRequests(filteredRequests.reverse());
+        }
+
+        function resetFilters() {
+            document.getElementById('search-requests').value = '';
+            document.getElementById('status-filter').value = '';
+            renderRequests();
+        }
+
+        // **نظام الإحصائيات**
+        function updateStatistics() {
+            const requests = loadRequests();
+            const total = requests.length;
+            const pending = requests.filter(req => 
+                req.status !== 'Printed' && req.status !== 'Approved_To_Print'
+            ).length;
+            const completed = requests.filter(req => 
+                req.status === 'Printed'
+            ).length;
+            const inReview = requests.filter(req => 
+                req.status === 'DCO_Review' || req.status === 'Quality_Manager' || req.status === 'Secretary_General'
+            ).length;
+            
+            document.getElementById('total-requests').textContent = total;
+            document.getElementById('pending-requests').textContent = pending;
+            document.getElementById('completed-requests').textContent = completed;
+            document.getElementById('review-requests').textContent = inReview;
+        }
+
+        // **نظام النسخ الاحتياطي**
+        function exportData() {
+            const requests = loadRequests();
+            
+            // تحويل الملفات إلى base64 للحفظ
+            const requestsWithFiles = requests.map(req => {
+                const requestCopy = {...req};
+                if (requestCopy.documentFile) {
+                    // لا يمكن حفظ كائن File مباشرة في JSON
+                    // في نظام حقيقي، سيتم رفع الملفات إلى الخادم
+                    requestCopy.documentFile = {
+                        name: requestCopy.documentFile.name,
+                        type: requestCopy.documentFile.type,
+                        size: requestCopy.documentFile.size,
+                        // في نظام حقيقي، سيتم حفظ رابط الملف بدلاً من البيانات
+                    };
+                }
+                return requestCopy;
+            });
+            
+            const dataStr = JSON.stringify(requestsWithFiles, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `backup_requests_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            showNotification('تم تصدير البيانات بنجاح', 'success');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const requests = JSON.parse(e.target.result);
+                    if (Array.isArray(requests)) {
+                        localStorage.setItem('printRequests2', JSON.stringify(requests));
+                        showNotification('تم استيراد البيانات بنجاح', 'success');
+                        renderRequests();
+                        updateStatistics();
+                    }
+                } catch (error) {
+                    showNotification('خطأ في تنسيق الملف', 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // إعادة تعيين حقل الرفع
+        }
+
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeVisitorCounter();
+            initializeRequests(); 
+            
+            // التحقق من الجلسة النشطة
+            const activeUser = checkSession();
+            if (activeUser) {
+                currentUserRole = activeUser.role;
+                currentUserName = activeUser.name;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                
+                // تحديث معلومات المستخدم في الرأس
+                updateUserDisplay(activeUser);
+                
+                // إظهار تحذير الصلاحية لأمناء الكليات
+                if (activeUser.role === 'College_Secretary') {
+                    document.getElementById('college-sec-warning').style.display = 'block';
+                    document.getElementById('user-college-name').textContent = currentUserCollege;
+                }
+                
+                renderRequests();
+                updateStatistics();
+                setupFilters();
+                autoLogout();
+            } else {
+                currentUserRole = null; 
+                currentUserName = null;
+                currentUserCollege = null;
+                const mainContent = document.getElementById('main-content');
+                const loginScreen = document.getElementById('login-screen');
+                loginScreen.style.display = 'flex';
+                mainContent.style.display = 'none';
+            }
+
+            const currentTime = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('last-sync-time').textContent = currentTime;
+        });
+    </script>
+</body>
+</html>
